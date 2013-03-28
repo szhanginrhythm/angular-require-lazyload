@@ -94,20 +94,20 @@ define([], function(){
                     dirLength = settings.directiveFiles.length,
                     fltLength = settings.filterFiles.length;
 
-                allDps = allDps.concat(settings.controllerFile, settings.serviceFiles, settings.directiveFiles, settings.filterFiles);
+                allDps = allDps.concat(settings.serviceFiles, settings.directiveFiles, settings.filterFiles, settings.controllerFile);
 
                 require(allDps, function() {
                     //put arguments in one loop because arguments is actually not an array even we can use it like arguments[index].
                     //We want to pass argument objects in register functions.
                     angular.forEach(arguments, function(argument, index){
-                        if (index == 0) {
-                            registerController(argument);
-                        } else if (index > 0 && index <= svcLength) {
+                        if (index < svcLength) {
                             registerFactory(argument);
-                        } else if (index > svcLength && index <= svcLength+dirLength) {
+                        } else if (index >= svcLength && index < svcLength+dirLength) {
                             registerDirective(argument);
-                        } else if (index > svcLength+dirLength) {
+                        } else if (index >= svcLength+dirLength && index < svcLength+dirLength+fltLength) {
                             registerFilter(argument);
+                        } else {
+                            registerController(argument);
                         }
                     });
 
